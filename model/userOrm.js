@@ -37,7 +37,20 @@ const findUserByIdFromDb = async (userId) => {
   } catch (e) {
     throw new Error(e);
   }
-}
+};
+
+
+// Create a query that deletes the user and then returns the deleted user
+const deleteUserByIdFromDb = async (userId) => {
+  try {
+    //   We need to find the user first before we delete him
+    const user = await findUserByIdFromDb(userId);
+    await connection.query(deleteUserByIdQuery, userId);
+    return user;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
 
 // Write the ORM for getting only a single user from the database by their ID
 // This function should take an ID
@@ -47,4 +60,5 @@ module.exports = {
   insertUserToDb,
   findAllUsersFromDb,
   findUserByIdFromDb,
+  deleteUserByIdFromDb,
 }
