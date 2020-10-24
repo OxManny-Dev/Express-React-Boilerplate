@@ -1,16 +1,19 @@
 const router = require('express').Router();
-const {findAllUsersFromDb} = require('../../../model/userOrm');
+const {
+  findAllUsersApi,
+  findUserByIdApi,
+  createUserApi,
+} = require('../../../controllers/userController');
 // /api/users
 
 router.route('/')
-  .get(async (req, res) => {
-    try {
-      const users = await findAllUsersFromDb();
-      res.json(users);
-    } catch  (e) {
-      res.status(400).json(e);
-    }
-  })
+  .get(findAllUsersApi)
+  .post(createUserApi);
+
+// /api/users/:userId
+
+router.route('/:userId')
+  .get(findUserByIdApi)
 
 
 module.exports = router;
