@@ -7,7 +7,7 @@ router.route('/')
     try {
       const users = await findAllUsersFromDb();
       res.json(users);
-    } catch (e) {
+    } catch  (e) {
       res.status(400).json(e);
     }
   })

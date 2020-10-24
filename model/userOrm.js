@@ -49,6 +49,7 @@ const deleteUserByIdFromDb = async (userId) => {
     return user;
   } catch (e) {
     throw new Error(e);
+    43
   }
 };
 
