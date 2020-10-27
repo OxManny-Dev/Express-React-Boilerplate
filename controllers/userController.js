@@ -1,5 +1,6 @@
 const {
   findAllUsersFromDb,
+  findUserByIdFromDb,
   insertUserToDb,
 } = require('../model/userOrm');
 
@@ -15,6 +16,15 @@ module.exports = {
   findUserByIdApi: async (req, res) => {
     const {userId} = req.params;
     console.log(userId);
+    try {
+      const user = await findUserByIdFromDb(userId);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+      res.json(user);
+    } catch (e) {
+      res.status(400).json(e);
+    }
   },
   createUserApi: async (req, res) => {
     //   any time user is sending data through a form
