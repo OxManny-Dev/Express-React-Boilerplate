@@ -1,18 +1,27 @@
 const {
   findAllUsers,
   findUserByIdQuery,
+  findUserByUserName,
   insertUserQuery,
   deleteUserByIdQuery,
 } = require('./userQueries');
+const bcrypt = require('bcryptjs');
 const connection = require('../config/connection');
+
+
+const comparePassword = async (candidatePassword, hashedPassword) => {
+  return await bcrypt.compare(candidatePassword, hashedPassword);
+};
 
 const insertUserToDb = async (username, password) => {
   try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     // Whenever we do an insert, an update or a delete,
     // we dont get the data that we modified back
     // what we get back is how many rows were affected
     // for the insert, it tells the id of the data that was just inserted
-    const [result] = await connection.query(insertUserQuery, [username, password]);
+    const [result] = await connection.query(insertUserQuery, [username, hashedPassword]);
     const [userResult] = await connection.query(findUserByIdQuery, result.insertId);
     return userResult[0];
   } catch (e) {
@@ -33,6 +42,15 @@ const findAllUsersFromDb = async () => {
 const findUserByIdFromDb = async (userId) => {
   try {
     const [userResult] = await connection.query(findUserByIdQuery, userId);
+    return userResult[0];
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+const findUserByUsernameFromDb = async (username) => {
+  try {
+    const [userResult] = await connection.query(findUserByUserName, username);
     return userResult[0];
   } catch (e) {
     throw new Error(e);
@@ -60,5 +78,7 @@ module.exports = {
   insertUserToDb,
   findAllUsersFromDb,
   findUserByIdFromDb,
+  findUserByUsernameFromDb,
   deleteUserByIdFromDb,
+  comparePassword,
 }
