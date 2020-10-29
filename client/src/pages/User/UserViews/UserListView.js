@@ -1,5 +1,19 @@
 import React from 'react';
 
+import { useUserListView } from '../UserHooks';
+
+
 export const UserListView = () => {
-  return <h1>I ARE USER LIST VIEW</h1>
+  const { users } = useUserListView();
+  return (
+    <div>
+      <ul>
+        {
+          users.map(user => {
+            return <li key={user.id}>{ user.username}</li>
+          })
+        }
+      </ul>
+    </div>
+  )
 };
