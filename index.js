@@ -10,6 +10,10 @@ if (process.env.NODE_ENV === 'production') {
 require('./services/passport');
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+// '/' , use the routes declared inside of here
+// '/auth/signin'
+// '/auth/signup'
 app.use(routes);
 
 app.listen(3001, () => {
